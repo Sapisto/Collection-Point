@@ -1,26 +1,27 @@
-using CollectPoint.Infrastructure.Extension;  
+using CollectPoint.Infrastructure.Extension;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// ---- Services: what can be injected (Nest module providers) ----
 builder.Services.AddDatabaseContext(builder.Configuration);
-
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+builder.Services.AddScopedServices();
+builder.Services.AddRepositoryServices();
+builder.Services.AddCustomControllers();
+builder.Services.AddSwaggerOpenAPI();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// ---- Pipeline: ORDER MATTERS, like app.use() in Express ----
+app.ConfigureCustomExceptionMiddleware(); 
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();      // → /swagger
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
