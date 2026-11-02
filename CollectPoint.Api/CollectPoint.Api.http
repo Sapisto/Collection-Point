@@ -1,0 +1,6 @@
+@CollectPoint.Api_HostAddress = http://localhost:5196
+
+GET {{CollectPoint.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
